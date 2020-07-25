@@ -3,7 +3,6 @@ blockchain = []
 
 def get_last_blockchain_value():
     """Returns the last value in the blockchain via index"""
-    
     return blockchain[-1]
     
 
@@ -14,23 +13,48 @@ def add_value(transaction_amount, last_transaction = 1):
     :transcaction amount: The amount that should be added.
     :last_transaction: The last blockchain transaction which defaults to 1.
     """
-    
     blockchain.append([ last_transaction, transaction_amount])
 
 
-def get_user_input():
+def get_transaction_value():
     """Returns the input of the user that 
     will be taken as the new transasction amount(float value)"""
-    
-    return float(input("Your transaction amount please: "))
+    user_input = float(input("Your transaction amount please: "))
+    return user_input
 
-tx_amount = get_user_input()
+
+def get_user_choice():
+    """Allows the user whether to print the current blockchain
+    or to add another transaction"""
+    user_input = input("Your choice: ")
+    return user_input
+
+
+def print_blockchain_elements():
+    """Output the blockchain list to the console"""
+    for block in blockchain:
+        print("Blockchain Output")
+        print(block)
+    print("Output Complete")
+
+tx_amount = get_transaction_value()
 add_value(tx_amount)
 
-tx_amount = get_user_input()
-add_value(last_transaction = get_last_blockchain_value(), transaction_amount = tx_amount)
+running = True
 
-tx_amount = get_user_input()
-add_value(tx_amount, get_last_blockchain_value())
-
-print(blockchain)
+while running:
+    print("Please choose how to proceed")
+    print("1.) Add a new transaction")
+    print("2.) Ouput the current blockchain")
+    print("3.) Quit the loop")
+    user_choice = get_user_choice()
+    if user_choice == "1":
+        tx_amount = get_transaction_value()
+        add_value(tx_amount, get_last_blockchain_value())
+    elif user_choice == "2":
+        print_blockchain_elements()
+    elif user_choice == "3":
+        running = False
+    else:
+        print("Please enter a valid option: ")
+        user_choice = get_user_choice()
