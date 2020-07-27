@@ -41,17 +41,39 @@ def print_blockchain_elements():
         print(block)
     print("Output Complete")
 
-tx_amount = get_transaction_value()
-add_transaction_value(tx_amount)
+
+def verify_chain():
+    """Verifies that the first index of a block(which is a list) is equal
+    to the entire previous block"""
+    block_index = 0
+    is_valid = True
+    for block in blockchain:
+        if block_index == 0:
+            block_index += 1
+            continue
+        elif block[0] == blockchain[block_index - 1]:
+            is_valid = True
+        else:
+            is_valid = False
+            print("BLOCKCHAIN INVALID")
+            break
+        block_index += 1
+    return is_valid
+
+# tx_amount = get_transaction_value()
+# add_transaction_value(tx_amount)
 
 running = True
 
 while running:
     print("Please choose how to proceed")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("1.) Add a new transaction")
     print("2.) Ouput the current blockchain")
     print("3.) Quit the loop")
     print("4.) Repeat Question")
+    print("5.) Manipulate the chain")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     user_choice = get_user_choice()
     
     if user_choice == "1":
@@ -63,8 +85,14 @@ while running:
         running = False
     elif user_choice == "4":
         continue
+    elif user_choice == "5":
+        if len(blockchain) >= 1:
+            blockchain[0] = [2]
     else:
         print("Please enter a valid option: ")
     print("Choice Registered !")
+    if not verify_chain():
+        break
+
 
 print("Process Complete !")
