@@ -47,6 +47,7 @@ while running:
     print("1.) Add a new transaction")
     print("2.) Ouput the current blockchain")
     print("3.) Quit the loop")
+    print("4.) Repeat Question")
     user_choice = get_user_choice()
     if user_choice == "1":
         tx_amount = get_transaction_value()
@@ -55,6 +56,9 @@ while running:
         print_blockchain_elements()
     elif user_choice == "3":
         running = False
+    elif user_choice == "4":
+        continue
     else:
         print("Please enter a valid option: ")
-        user_choice = get_user_choice()
+    print("Choice Registered !")
+print("Process Complete !")
