@@ -1,5 +1,7 @@
 #Initializing the blockchain
 blockchain = []
+open_transactions = []
+owner = "Shota"
 
 def get_last_blockchain_value():
     """Returns the last value in the blockchain via index"""
@@ -8,23 +10,38 @@ def get_last_blockchain_value():
     return blockchain[-1]
     
 
-def add_transaction_value(transaction_amount, last_transaction=[1]):
+def add_transaction(recipient, sender=owner, amount=1.0):
     """ Append a new value as well as the last blockchain value to the blockchain
     
     Arguments:
-    :transcaction amount: The amount that should be added.
-    :last_transaction: The last blockchain transaction which defaults to 1.
+        :sender: The defined sender of the coins
+        :recipient: The defined receiver of the coins
+        :amount: The defined amount of coins being sent (default = 1.0)
     """
-    if last_transaction == None:
-        last_transaction = [1]
-    blockchain.append([ last_transaction, transaction_amount])
+    transaction = {
+        "sender": sender,
+        "recipient": recipient,
+        "amount": amount
+    }
+
+    open_transactions.append(transaction)
 
 
-def get_transaction_value():
+def mine_block():
+    pass
+
+
+def get_transaction_data():
     """Returns the input of the user that 
-    will be taken as the new transasction amount(float value)"""
-    user_input = float(input("Your transaction amount please: "))
-    return user_input
+    will be taken as the new transasction amount(float value)
+    
+    Returns:
+        :tx_recipient: transaction recipient
+        :tx_amount: transaction amount
+    """
+    tx_recipient = input("Enter the recipient of the transaction: ")
+    tx_amount = float(input("Your transaction amount please: "))
+    return (tx_recipient, tx_amount) #tuple with needed values
 
 
 def get_user_choice():
@@ -78,8 +95,10 @@ while running:
     user_choice = get_user_choice()
     
     if user_choice == "1":
-        tx_amount = get_transaction_value()
-        add_transaction_value(tx_amount, get_last_blockchain_value())
+        tx_data = get_transaction_data()
+        recipient, amount = tx_data #pull from tuple
+        add_transaction(recipient, amount = amount)
+        print("OPEN TRANSACTIONS: ", open_transactions)
     elif user_choice == "2":
         print_blockchain_elements()
     elif user_choice == "3":
