@@ -39,29 +39,30 @@ def print_blockchain_elements():
     for block in blockchain:
         print("Blockchain Output")
         print(block)
-    print("Output Complete")
+    else:
+        print("-" * 22)
 
 
 def verify_chain():
     """Verifies that the first index of a block(which is a list) is equal
     to the entire previous block"""
-    block_index = 0
     is_valid = True
-    for block in blockchain:
+    blockchain_length = len(blockchain)
+    for block_index in range(0, blockchain_length):
         if block_index == 0:
-            block_index += 1
             continue
-        elif block[0] == blockchain[block_index - 1]:
+        elif blockchain[block_index][0] == blockchain[block_index - 1]: #compares the first entry to the entire previous entry
             is_valid = True
         else:
-            is_valid = False
+            is_valid = False #breaks loop since validity is compromised
             print("BLOCKCHAIN INVALID")
+            # print("CURR", blockchain[block_index][0])
+            # print("Prev", blockchain[block_index - 1])
+            print_blockchain_elements() # To view the discrepency
             break
-        block_index += 1
+            
     return is_valid
 
-# tx_amount = get_transaction_value()
-# add_transaction_value(tx_amount)
 
 running = True
 
@@ -93,6 +94,5 @@ while running:
     print("Choice Registered !")
     if not verify_chain():
         break
-
-
-print("Process Complete !")
+else:
+    print("Process Complete !")
