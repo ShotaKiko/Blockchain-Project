@@ -1,4 +1,10 @@
 #Initializing the blockchain
+genesis_block ={
+    'previous_hash': "",
+    'index': 0,
+    'transactions': []
+}
+
 blockchain = []
 open_transactions = []
 owner = "Shota"
@@ -28,8 +34,14 @@ def add_transaction(recipient, sender=owner, amount=1.0):
 
 
 def mine_block():
-    pass
-
+    """All open transactions are taken and added to a new block"""
+    last_block = blockchain[-1]
+    block = {
+        'previous_hash': "XYZ",
+        'index':len(blockchain), #will be an untaken index
+        'transactions': open_transactions
+    }
+    blockchain.append(block)
 
 def get_transaction_data():
     """Returns the input of the user that 
@@ -96,7 +108,7 @@ while running:
     
     if user_choice == "1":
         tx_data = get_transaction_data()
-        recipient, amount = tx_data #pull from tuple
+        recipient, amount = tx_data #pull from transaction tuple
         add_transaction(recipient, amount = amount)
         print("OPEN TRANSACTIONS: ", open_transactions)
     elif user_choice == "2":
