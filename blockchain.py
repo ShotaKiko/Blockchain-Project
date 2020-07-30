@@ -5,7 +5,7 @@ genesis_block ={
     'transactions': []
 }
 
-blockchain = []
+blockchain = [genesis_block]
 open_transactions = []
 owner = "Shota"
 
@@ -36,8 +36,15 @@ def add_transaction(recipient, sender=owner, amount=1.0):
 def mine_block():
     """All open transactions are taken and added to a new block"""
     last_block = blockchain[-1]
+    hashed_block = ''
+
+    for key in last_block:
+        value = last_block[key]
+        hashed_block= hashed_block + str(value)
+    print("HASHED BLOCK", hashed_block)
+    
     block = {
-        'previous_hash': "XYZ",
+        'previous_hash': hashed_block,
         'index':len(blockchain), #will be an untaken index
         'transactions': open_transactions
     }
@@ -99,6 +106,7 @@ while running:
     print("Please choose how to proceed")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("1.) Add a new transaction")
+    print("11.) Mine a new block")
     print("2.) Ouput the current blockchain")
     print("3.) Quit the loop")
     print("4.) Repeat Question")
@@ -120,10 +128,12 @@ while running:
     elif user_choice == "5":
         if len(blockchain) >= 1:
             blockchain[0] = [2]
+    elif user_choice == "11":
+        mine_block()
     else:
         print("Please enter a valid option: ")
     print("Choice Registered !")
-    if not verify_chain():
-        break
+    # if not verify_chain():
+    #     break
 else:
     print("Process Complete !")
