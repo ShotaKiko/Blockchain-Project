@@ -1,6 +1,6 @@
 #Initializing the blockchain
-genesis_block ={
-    'previous_hash': "",
+genesis_block = {
+    'previous_hash': '',
     'index': 0,
     'transactions': []
 }
@@ -8,6 +8,10 @@ genesis_block ={
 blockchain = [genesis_block]
 open_transactions = []
 owner = "Shota"
+
+def hash_block(block):
+    return '-'.join([str(block[key]) for key in block])
+
 
 def get_last_blockchain_value():
     """Returns the last value in the blockchain via index"""
@@ -36,19 +40,14 @@ def add_transaction(recipient, sender=owner, amount=1.0):
 def mine_block():
     """All open transactions are taken and added to a new block"""
     last_block = blockchain[-1]
-    hashed_block = ''
-
-    for key in last_block:
-        value = last_block[key]
-        hashed_block= hashed_block + str(value)
-    print("HASHED BLOCK", hashed_block)
-    
+    hashed_block = hash_block(last_block)
     block = {
         'previous_hash': hashed_block,
         'index':len(blockchain), #will be an untaken index
         'transactions': open_transactions
     }
     blockchain.append(block)
+
 
 def get_transaction_data():
     """Returns the input of the user that 
@@ -60,7 +59,7 @@ def get_transaction_data():
     """
     tx_recipient = input("Enter the recipient of the transaction: ")
     tx_amount = float(input("Your transaction amount please: "))
-    return (tx_recipient, tx_amount) #tuple with needed values
+    return tx_recipient, tx_amount #tuple with needed values
 
 
 def get_user_choice():
@@ -72,33 +71,24 @@ def get_user_choice():
 
 def print_blockchain_elements():
     """Output the blockchain list to the console"""
+    counter = 1
     for block in blockchain:
-        print("Blockchain Output")
+        print(f"Blockchain Output-- Block -- {counter}")
         print(block)
+        counter += 1
     else:
         print("-" * 22)
 
 
 def verify_chain():
-    """Verifies that the first index of a block(which is a list) is equal
-    to the entire previous block"""
-    is_valid = True
-    blockchain_length = len(blockchain)
-    for block_index in range(0, blockchain_length):
-        if block_index == 0:
+    """Verifies that the stored hash with the recalcucated has of previous block"""
+    for (index, block) in enumerate(blockchain):
+        if index == 0:
             continue
-        elif blockchain[block_index][0] == blockchain[block_index - 1]: #compares the first entry to the entire previous entry
-            is_valid = True
-        else:
-            is_valid = False #breaks loop since validity is compromised
-            print("BLOCKCHAIN INVALID")
-            # print("CURR", blockchain[block_index][0])
-            # print("Prev", blockchain[block_index - 1])
-            print_blockchain_elements() # To view the discrepency
-            break
-            
-    return is_valid
-
+        if block['previous_hash'] != hash_block(blockchain[index - 1]): #recalc hash of last block and compare with prev stored hash
+            return False
+    return True
+    
 
 running = True
 
@@ -106,11 +96,11 @@ while running:
     print("Please choose how to proceed")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("1.) Add a new transaction")
-    print("11.) Mine a new block")
-    print("2.) Ouput the current blockchain")
-    print("3.) Quit the loop")
+    print("2.) Mine a new block")
+    print("3.) Ouput the current blockchain")
+    print("quit.) Quit the loop")
     print("4.) Repeat Question")
-    print("5.) Manipulate the chain")
+    print("hack.) Manipulate the chain")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     user_choice = get_user_choice()
     
@@ -119,21 +109,33 @@ while running:
         recipient, amount = tx_data #pull from transaction tuple
         add_transaction(recipient, amount = amount)
         print("OPEN TRANSACTIONS: ", open_transactions)
+    
     elif user_choice == "2":
-        print_blockchain_elements()
+        mine_block()
+    
     elif user_choice == "3":
-        running = False
+        print_blockchain_elements()
+    
+    elif user_choice == "hack":
+        if len(blockchain) >= 1:
+            blockchain[0] = {
+                'previous_hash': "",
+                'index': 0,
+                'transactions': [{"sender": "Ranger","recipient": "Doug", "amount": 100}]
+            }
+    
     elif user_choice == "4":
         continue
-    elif user_choice == "5":
-        if len(blockchain) >= 1:
-            blockchain[0] = [2]
-    elif user_choice == "11":
-        mine_block()
+    
+    elif user_choice == "quit":
+        running = False
+    
     else:
-        print("Please enter a valid option: ")
-    print("Choice Registered !")
-    # if not verify_chain():
-    #     break
+        print("Invalid input...Please enter a valid option: ")
+    
+    if not verify_chain():
+        print_blockchain_elements()
+        print("INVALID BLOCKCHAIN")
+        break
 else:
     print("Process Complete !")
