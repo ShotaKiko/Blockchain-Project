@@ -14,6 +14,33 @@ def hash_block(block):
     return '-'.join([str(block[key]) for key in block])
 
 
+def get_balance(participant):
+    """Retrieves balance statement for participant provided
+        Argument:
+            :participant: the person in question
+    """
+    #list comp to pull participant from transaction list
+    tx_sender = [[tx['amount'] for tx in block['transactions'] if tx['sender'] == participant] for block in blockchain]
+    #getting amt for tx for all tx in block if sender matched participant provided-- applied for every block in chain
+    print("TXSENDER", tx_sender)
+    amount_sent = 0
+    for transaction in tx_sender:
+        if len(transaction) > 0:
+            for amount in transaction:
+                print("Transaction1", transaction)
+                amount_sent += amount #TODO Need to optimize nested loop//access every amount in every transaction sum method()?????
+    #getting amt for tx for all tx in block if recipient matched participant provided -- applied for every block in chain
+    tx_recipient = [[tx['amount']for tx in block['transactions'] if tx['recipient'] == participant] for block in blockchain]
+    print("TXRECIPIENT", tx_recipient)
+    amount_received = 0
+    for transaction in tx_recipient:
+        if len(transaction)> 0:
+            for amount in transaction:
+                print("Transaction2", transaction)
+                amount_received += amount ##TODO Need to optimize nested loop//access every amount in every transaction sum method()?????
+    return amount_received - amount_sent #Current balance
+
+
 def get_last_blockchain_value():
     """Returns the last value in the blockchain via index"""
     if len(blockchain) < 1:
@@ -50,6 +77,7 @@ def mine_block():
         'transactions': open_transactions
     }
     blockchain.append(block)
+    return True #
 
 
 def get_transaction_data():
@@ -115,7 +143,8 @@ while running:
         print("OPEN TRANSACTIONS: ", open_transactions)
     
     elif user_choice == "2":
-        mine_block()
+        if mine_block():
+            open_transactions = [] #reset transactions to empty list following succesful mine
     
     elif user_choice == "3":
         print_blockchain_elements()
@@ -133,7 +162,7 @@ while running:
 
     elif user_choice == "5":
         print(participants)
-        
+
     elif user_choice == "quit":
         running = False
     
@@ -144,5 +173,6 @@ while running:
         print_blockchain_elements()
         print("INVALID BLOCKCHAIN")
         break
+    print("CURRENT BALANCE", get_balance('Shota'))
 else:
     print("Process Complete !")
