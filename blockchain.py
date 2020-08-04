@@ -1,6 +1,6 @@
 #Initializing the blockchain
 genesis_block = {
-    'previous_hash': '',
+    'previous_hash': 'origin',
     'index': 0,
     'transactions': []
 }
@@ -8,6 +8,7 @@ genesis_block = {
 blockchain = [genesis_block]
 open_transactions = []
 owner = "Shota"
+participants = {"Shota"}
 
 def hash_block(block):
     return '-'.join([str(block[key]) for key in block])
@@ -35,6 +36,8 @@ def add_transaction(recipient, sender=owner, amount=1.0):
     }
 
     open_transactions.append(transaction)
+    participants.add(sender)
+    participants.add(recipient)
 
 
 def mine_block():
@@ -100,6 +103,7 @@ while running:
     print("3.) Ouput the current blockchain")
     print("quit.) Quit the loop")
     print("4.) Repeat Question")
+    print("5.) Ouput participants")
     print("hack.) Manipulate the chain")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     user_choice = get_user_choice()
@@ -126,7 +130,10 @@ while running:
     
     elif user_choice == "4":
         continue
-    
+
+    elif user_choice == "5":
+        print(participants)
+        
     elif user_choice == "quit":
         running = False
     
