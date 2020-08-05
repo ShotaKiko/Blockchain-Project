@@ -1,4 +1,6 @@
 #Initializing the blockchain
+MINING_REWARD = 10
+
 genesis_block = {
     'previous_hash': 'origin',
     'index': 0,
@@ -69,6 +71,12 @@ def mine_block():
     """All open transactions are taken and added to a new block"""
     last_block = blockchain[-1]
     hashed_block = hash_block(last_block)
+    reward_transaction = {
+        'sender': 'MINING',
+        'recipient': owner,
+        'amount': MINING_REWARD
+    }
+    open_transactions.append(reward_transaction)
     block = {
         'previous_hash': hashed_block,
         'index':len(blockchain), #will be an untaken index
