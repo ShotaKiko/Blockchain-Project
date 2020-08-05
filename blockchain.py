@@ -26,18 +26,16 @@ def get_balance(participant):
     amount_sent = 0
     for transaction in tx_sender:
         if len(transaction) > 0:
-            for amount in transaction:
-                print("Transaction1", transaction)
-                amount_sent += amount #TODO Need to optimize nested loop//access every amount in every transaction sum method()?????
+            print("Transaction1", transaction)
+            amount_sent += sum(transaction)
     #getting amt for tx for all tx in block if recipient matched participant provided -- applied for every block in chain
     tx_recipient = [[tx['amount']for tx in block['transactions'] if tx['recipient'] == participant] for block in blockchain]
     print("TXRECIPIENT", tx_recipient)
     amount_received = 0
     for transaction in tx_recipient:
         if len(transaction)> 0:
-            for amount in transaction:
-                print("Transaction2", transaction)
-                amount_received += amount ##TODO Need to optimize nested loop//access every amount in every transaction sum method()?????
+            print("Transaction2", transaction)
+            amount_received += sum(transaction) 
     return amount_received - amount_sent #Current balance
 
 
@@ -77,7 +75,7 @@ def mine_block():
         'transactions': open_transactions
     }
     blockchain.append(block)
-    return True #
+    return True #To used in if else chain
 
 
 def get_transaction_data():
