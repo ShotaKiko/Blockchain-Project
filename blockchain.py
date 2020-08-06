@@ -24,6 +24,8 @@ def get_balance(participant):
     #list comp to pull participant from transaction list
     tx_sender = [[tx['amount'] for tx in block['transactions'] if tx['sender'] == participant] for block in blockchain]
     #getting amt for tx for all tx in block if sender matched participant provided-- applied for every block in chain
+    open_tx_sender = [tx['amount'] for tx in open_transactions if tx['sender'] == participant] #for checking open tx balance
+    tx_sender.append(open_tx_sender) #update with all found sending values in open transactions
     print("TXSENDER", tx_sender)
     amount_sent = 0
     for transaction in tx_sender:
@@ -46,8 +48,13 @@ def get_last_blockchain_value():
     if len(blockchain) < 1:
         return None
     return blockchain[-1]
-    
 
+
+def verify_transaction(transaction):
+    sender_balance = get_balance(transaction['sender'])
+    return sender_balance >= transaction['amount']
+
+    
 def add_transaction(recipient, sender=owner, amount=1.0):
     """ Append a new value as well as the last blockchain value to the blockchain
     
@@ -62,9 +69,12 @@ def add_transaction(recipient, sender=owner, amount=1.0):
         "amount": amount
     }
 
-    open_transactions.append(transaction)
-    participants.add(sender)
-    participants.add(recipient)
+    if verify_transaction(transaction):
+        open_transactions.append(transaction)
+        participants.add(sender)
+        participants.add(recipient)
+        return True
+    return False
 
 
 def mine_block():
@@ -145,7 +155,10 @@ while running:
     if user_choice == "1":
         tx_data = get_transaction_data()
         recipient, amount = tx_data #pull from transaction tuple
-        add_transaction(recipient, amount = amount)
+        if add_transaction(recipient, amount = amount):
+            print ("Added transaction!")
+        else:
+            print("Transaction failed...")
         print("OPEN TRANSACTIONS: ", open_transactions)
     
     elif user_choice == "2":
