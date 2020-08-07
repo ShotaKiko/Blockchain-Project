@@ -86,11 +86,12 @@ def mine_block():
         'recipient': owner,
         'amount': MINING_REWARD
     }
-    open_transactions.append(reward_transaction)
+    copied_transactions = open_transactions[:]
+    copied_transactions.append(reward_transaction)
     block = {
         'previous_hash': hashed_block,
         'index':len(blockchain), #will be an untaken index
-        'transactions': open_transactions
+        'transactions': copied_transactions
     }
     blockchain.append(block)
     return True #To used in if else chain
