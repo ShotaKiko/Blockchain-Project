@@ -136,6 +136,16 @@ def verify_chain():
         if block['previous_hash'] != hash_block(blockchain[index - 1]): #recalc hash of last block and compare with prev stored hash
             return False
     return True
+
+def verify_transactions():
+    # is_valid = True
+    # for tx in open_transactions:
+    #     if verify_transaction(tx):
+    #         is_valid = True
+    #     else:
+    #         is_valid = False
+    # return is_valid
+    return all([verify_transaction(tx) for tx in open_transactions])
     
 
 running = True
@@ -150,6 +160,7 @@ while running:
     print("4.) Repeat Question")
     print("5.) Ouput participants")
     print("hack.) Manipulate the chain")
+    print("6.) Verify transaction validity")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     user_choice = get_user_choice()
     
@@ -182,6 +193,12 @@ while running:
 
     elif user_choice == "5":
         print(participants)
+
+    elif user_choice == "6":
+        if verify_transactions():
+            print("``````````````````````ALL TRANSACTIONS VALID``````````````````````")
+        else:
+            print("Invalid transaction detected")
 
     elif user_choice == "quit" or user_choice == "q":
         running = False
