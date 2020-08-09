@@ -169,7 +169,7 @@ while running:
     elif user_choice == "3":
         print_blockchain_elements()
     
-    elif user_choice == "hack":
+    elif user_choice == "hack" or user_choice == "h":
         if len(blockchain) >= 1:
             blockchain[0] = {
                 'previous_hash': "",
@@ -183,7 +183,7 @@ while running:
     elif user_choice == "5":
         print(participants)
 
-    elif user_choice == "quit":
+    elif user_choice == "quit" or user_choice == "q":
         running = False
     
     else:
