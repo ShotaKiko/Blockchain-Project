@@ -220,6 +220,6 @@ while running:
         print_blockchain_elements()
         print("INVALID BLOCKCHAIN")
         break
-    print("CURRENT BALANCE", get_balance("Shota"))
+    print(f'Balance of Shota: {get_balance("Shota"):6.2f}')
 else:
     print("Process Complete !")
